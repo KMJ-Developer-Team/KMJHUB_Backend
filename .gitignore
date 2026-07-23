@@ -9,7 +9,6 @@ __pycache__/
 
 
 # Django stuff Remove-Item -Recurse -Force .\apps\.git
-postgresql
 *.log
 .env
 .venv
