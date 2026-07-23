@@ -37,6 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # local apps
+    'accounts',
+
+    # External apps
+    'rest_framework',
+
+    
 ]
 
 MIDDLEWARE = [
@@ -74,8 +82,12 @@ WSGI_APPLICATION = 'hubcore.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'KMJHUB',
+        'USER': 'django_admin',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '5432', # default PostgreSQL port
     }
 }
 
