@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.mail import send_mail
 from django.utils.encoding import force_bytes, force_str  # forcebype for value to byte conversion(encoding garna ) arko chai decoding
-from django.utils.http import urlsafe_base64_encode #creates URL_Safe string , encodes user ID (dont knokw wtf this is mari mari bujna khojiya )
+from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode #creates URL_Safe string , encodes user ID (dont knokw wtf this is mari mari bujna khojiya )
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
