@@ -1,2 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# SQLite
 db.sqlite3
-.venv
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
