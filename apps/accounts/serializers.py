@@ -61,3 +61,15 @@ class LoginSerializer(serializers.Serializer):
 # Serializer for user logout using refresh token only
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField(write_only=True)  
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+        ]
