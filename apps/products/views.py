@@ -4,6 +4,7 @@ from rest_framework import status
 from .models import Product
 from rest_framework import permissions
 from .serializers import ProductListSerializer, ProductDetailSerializer
+from .pagination import ProductPagination
 
 
 class ProductListAPIView(APIView):
@@ -11,8 +12,10 @@ class ProductListAPIView(APIView):
 
     def get(self, request):
         products = Product.objects.filter(is_active=True).order_by("-created_at")
-        serializer = ProductListSerializer(products, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        paginator = ProductPagination()
+        paginated_products = paginator.paginate_queryset(products, request)
+        serializer = ProductListSerializer(paginated_products, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
 
 class ProductDetailAPIView(APIView):
