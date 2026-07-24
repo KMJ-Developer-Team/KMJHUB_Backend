@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "apps.accounts",
+    "apps.products",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
 ]
@@ -85,13 +86,13 @@ WSGI_APPLICATION = 'hubcore.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "kmjhub_db",
-        "USER": "postgres",
-        "PASSWORD": "admin123",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'kmjhub_db',
+        'USER': 'moyush',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '5432', # default PostgreSQL port
     }
 }
 
@@ -131,3 +132,23 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+AUTH_USER_MODEL = "accounts.User"
+
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+    ]
+}
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = "csitkolagi@gmail.com"
+EMAIL_HOST_PASSWORD = "wgrb udpe hucm afod"
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

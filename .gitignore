@@ -1,22 +1,17 @@
-# Python
-__pycache__/
+# Virtual environment
+myenv/
+# Python cache files
 pycache/
+__pycache__/
+*.pyc
+
 *.py[cod]
 
-# Virtual environment
-.venv/
 
-# Environment variables
+# Django stuff Remove-Item -Recurse -Force .\apps\.git
+*.log
 .env
-.env.*
-!.env.example
+.venv
 
-# SQLite
-db.sqlite3
-
-# IDE
-.vscode/
-.idea/
-
-# OS
+#Os
 .DS_Store
