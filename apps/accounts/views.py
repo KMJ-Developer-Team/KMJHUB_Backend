@@ -1,3 +1,8 @@
+from django.contrib.auth import authenticate
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import TokenError
+from urllib import request
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.mail import send_mail
@@ -6,20 +11,36 @@ from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode #creat
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import AllowAny
-
+from rest_framework import status, permissions
 
 from .models import User
 from .serializers import (
     PasswordResetSerializer,
     PasswordResetConfirmSerializer,
+    RegistrationSerializer,
+    LoginSerializer, 
+    LogoutSerializer,
 )
 
+# registration api view which is used to register user 
+class RegistrationApiView(APIView):
+    permission_classes = [permissions.AllowAny] #permission to allow any uyser to interact with register api endpoint
+    try:
+        def post(self, request):
+            serializer= RegistrationSerializer(data=request.data) #getting data send from frontedna nd converting it in python objects
+
+            if serializer.is_valid(): #check validation on every data by calling validate function in serializer class and create a dictionary called validated_data which include validated data
+                serializer.save() # call create fucntion in serializer class 
+                return Response(
+                    serializer.data, status= status.HTTP_201_CREATED
+                )
+            return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(e)
 
 class PasswordResetView(APIView):
     #permission diyena so aailea lai yo view ko lai permission deko
-    permission_classes = [AllowAny]
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request):
         serializer = PasswordResetSerializer(data=request.data)
@@ -60,7 +81,7 @@ class PasswordResetView(APIView):
 
 
 class PasswordResetConfirmView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request):
         serializer = PasswordResetConfirmSerializer(data=request.data)
@@ -93,3 +114,55 @@ class PasswordResetConfirmView(APIView):
             {"message":"Reached this point successfully."},
             status = status.HTTP_200_OK
         )
+
+
+class LoginView(APIView):
+    permission_classes = [permissions.AllowAny]   # allow any user to access this view
+
+    def post(self, request):   # handle post request for login
+        serializer = LoginSerializer(data= request.data)   
+        # create a serializer instance with the request data then validate username and password
+        serializer.is_valid(raise_exception=True)          
+        username = serializer.validated_data["username"]
+        password = serializer.validated_data["password"]
+        user = authenticate(request, username=username, password=password)  
+
+        if user is None:
+            raise AuthenticationFailed("Invalid username or password")
+
+        refresh = RefreshToken.for_user(user)   # generate a JWT refresh token for the authenticated user
+        return Response({
+                # convert access and refresh token to a JWT string
+                "access": str(refresh.access_token),   
+                "refresh": str(refresh),
+                "message": "Login successful",  
+
+                # return user details in the response for frontend
+                "user": {  
+                    "id": user.id,
+                    "username": user.username,
+                    "email": user.email,
+                    "role": user.role,
+                },
+            },
+            status=status.HTTP_200_OK,
+        )
+
+
+class LogoutView(APIView):
+    permission_classes = [permissions.IsAuthenticated]   # only logged in user can call this api endpoint
+
+    def post(self, request):
+        # check if the request data contains a valid refresh token
+        serializer = LogoutSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # get the refresh token from the request data
+        refresh_token = serializer.validated_data["refresh"]  
+
+        try:   # blacklist the refresh token to make it unusable for future requests
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+        except TokenError:
+            return Response({"message": "Invalid or expired refresh token."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": "Logout successful."}, status=status.HTTP_200_OK)

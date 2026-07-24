@@ -29,7 +29,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,9 +36,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.accounts',
-    'rest_framework',
+    "apps.accounts",
+    "apps.products",
+    "rest_framework",
+    "rest_framework_simplejwt.token_blacklist",
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -77,16 +88,11 @@ WSGI_APPLICATION = 'hubcore.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-
         'NAME': 'kmjhub_db',
-
         'USER': 'moyush',
-
         'PASSWORD': 'admin',
-
         'HOST': 'localhost',
-
-        'PORT': '5432',
+        'PORT': '5432', # default PostgreSQL port
     }
 }
 
