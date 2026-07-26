@@ -13,14 +13,21 @@ class FilterAndSearch:
         category= self.request.query_params.get("category")
 
         if product_type:
-            self.queryset = self.queryset.filter(product_type=product_type)
+            self.queryset = self.queryset.filter(product_type__icontains=product_type)
 
         if category:
-            self.queryset = self.queryset.filter(category = category)
+            self.queryset = self.queryset.filter(category__name__icontains= category)
     
     def search(self):
-        search = self.request.query_params.get("search")
-        self.queryset = self.queryset.filter(Q(name__icontains = search) | Q(category__icontains = search) | Q(product_type__icontains = search))
+        search_type = self.request.query_params.get("search_type")
+        print("Search:", search_type)
+
+        if search_type:
+            self.queryset = self.queryset.filter(
+                Q(name__icontains=search_type) | 
+                Q(category__name__icontains=search_type) | 
+                Q(product_type__icontains=search_type)
+            )
         
     def apply(self):
         self.filter()

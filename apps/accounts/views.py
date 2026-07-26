@@ -1,7 +1,11 @@
 from django.contrib.auth import authenticate
+from rest_framework import permissions, status
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from urllib import request
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -21,6 +25,7 @@ from .serializers import (
     LoginSerializer, 
     LogoutSerializer,
 )
+
 
 # registration api view which is used to register user 
 class RegistrationApiView(APIView):
@@ -53,7 +58,6 @@ class PasswordResetView(APIView):
             if user:
                 token = PasswordResetTokenGenerator().make_token(user) #create the unique token, temp ho yo remember
                 uid = urlsafe_base64_encode(force_bytes(user.id))  # tiyo mathi ko base64 ya use huncha encode garna id lai byte ma convert
-
 
                     # front end ko link lai point gariya 
                 reset_link = (
@@ -98,7 +102,6 @@ class PasswordResetConfirmView(APIView):
             user = User.objects.filter(id=user_id).first()
         except Exception:
             user= None
-
 
         if user is None or not PasswordResetTokenGenerator().check_token(user,token):  #user valid cha aani tiyo token ni valid cha check gariya
             return Response(
