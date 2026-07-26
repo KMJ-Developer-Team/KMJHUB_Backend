@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework.permissions import IsAuthenticated
 from urllib import request
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -20,6 +21,7 @@ from .serializers import (
     RegistrationSerializer,
     LoginSerializer, 
     LogoutSerializer,
+    UserProfileSerializer,
 )
 
 # registration api view which is used to register user 
@@ -166,3 +168,14 @@ class LogoutView(APIView):
         except TokenError:
             return Response({"message": "Invalid or expired refresh token."}, status=status.HTTP_400_BAD_REQUEST)
         return Response({"message": "Logout successful."}, status=status.HTTP_200_OK)
+
+
+class UserProfileView(APIView):
+    permissions_classes = [IsAuthenticated]
+
+    def get(self,request):
+        user = request.user  # no need for User.object.get() sedai token bata recognize garcha
+
+        serializer = UserProfileSerializer(user)
+
+        return Response(serializer.data)

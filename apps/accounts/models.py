@@ -11,4 +11,4 @@ class User(AbstractUser):
     role = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add= True , unique= True )
     updated_at = models.DateTimeField(auto_now_add= True,  unique = True )
-    
+    favourite_games = models.TextField(blank=True)

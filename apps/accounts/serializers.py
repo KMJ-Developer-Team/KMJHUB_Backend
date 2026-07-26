@@ -36,7 +36,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
         return user
 
-        
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
     uid = serializers.CharField()  #user id from the reset link URL
@@ -52,6 +51,7 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
             )
         return data
 
+
 # Serializer for user login with username and password
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -64,12 +64,15 @@ class LogoutSerializer(serializers.Serializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(read_only=True)
+
+
     class Meta:
         model = User
         fields = [
             "id",
             "username",
             "email",
-            "first_name",
-            "last_name",
+            "phone_number",
+            "favourite_games",
         ]
