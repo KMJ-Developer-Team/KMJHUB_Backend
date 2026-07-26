@@ -15,6 +15,41 @@ class RegistrationSerializer(serializers.ModelSerializer):
         model = User
         fields= ['username', 'email', 'phone_number', 'password', 'confirm_password', 'accept_terms'] 
 
+
+    def validate_username(self,value):
+        if len(value.strip())< 3:
+            raise serializers.ValidationError(
+                "User name must be at least 3 character long.."
+            )
+        return value
+
+    def validate_phone_number(self, value):
+        if not value.isdigit():
+            raise serializers.ValidationError(
+                "Phone number must contain only digits."
+            )
+
+        if len(value) != 10:
+            raise serializers.ValidationError(
+                "Phone number must be 10 digits."
+            )
+
+        return value
+
+
+    def validate(self, data):
+        if data["password"] != data["confirm_password"]:
+            raise serializers.ValidationError(
+                "Passwords don't match."
+            )
+
+        if not data["accept_terms"]:
+            raise serializers.ValidationError(
+                "You must accept terms for registration."
+            )
+
+        return data
+
     def validate(self, data): #this method is called when we call serializer.is_valid() in views.py
         if data['password'] != data['confirm_password']:
             raise ValidationErr("Password don't match")
