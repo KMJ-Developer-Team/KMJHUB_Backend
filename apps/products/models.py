@@ -2,9 +2,10 @@ from django.db import models
 from django.utils.text import slugify    # default product ko harek ko slug na banauna yo import 
 # Create your models here.
 #category -> games, movies etc etc
+
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=120,unique=True)
+    slug = models.SlugField(max_length=120, unique=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     parent = models.ForeignKey(
@@ -13,7 +14,8 @@ class Category(models.Model):
         null = True,
         blank =True,
         related_name="children",
-    )  
+    )
+    
     def save(self,*args,**kwargs):    # harek choti save garnu aagadhi slug banako
         if not self.slug:
             self.slug = slugify(self.name)
@@ -23,11 +25,9 @@ class Category(models.Model):
         return self.name
 
 
-
-
 class Product(models.Model):
     PRODUCT_TYPES = [
-    ("giftcard", "Gift Card"),
+    ("giftcard", "Giftcard"),
     ("subscription", "Subscription"),
     ("topup","TopUp"),
     ]
@@ -39,7 +39,8 @@ class Product(models.Model):
     )
 
     name = models.CharField(max_length=200)
-    slug = models.SlugField(max_length=220, unique=True)
+    slug = models.SlugField(max_length=220, unique=True, blank=True)
+    image = models.ImageField(upload_to="products/", blank=True)
     description = models.TextField()
     price = models.DecimalField(
         max_digits=10,
@@ -48,7 +49,7 @@ class Product(models.Model):
 
     product_type = models.CharField(
         max_length=20,
-        choices=PRODUCT_TYPES,
+        choices= PRODUCT_TYPES,
         default="giftcard",
     )
 
