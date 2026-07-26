@@ -13,8 +13,10 @@ class ProductListSerializer(serializers.ModelSerializer):
             'slug',
             'price',
             'product_type',
+            'image',
             'category',
             'created_at',
+
         ]
 
 
