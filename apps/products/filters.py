@@ -3,17 +3,17 @@ from django.db.models import Q
 
 
 class FilterAndSearch:
-
-    def __init__(self, request, queryset):
-        self.request = request
-        self.queryset = queryset
+    # this contructor is used because we can use only self as a parameter in all method inside this class if we don't use init constructor then we have pass request and queryset to every method as parameter
+    def __init__(self, request, queryset): #contructor which is called when object is created in views
+        self.request = request #it store incoming request
+        self.queryset = queryset # it store queryset pass down from views.py
 
     def filter(self):
-        product_type = self.request.query_params.get("product_type")
+        product_type = self.request.query_params.get("product_type") #it fetch the value of product_type from url
         category= self.request.query_params.get("category")
 
         if product_type:
-            self.queryset = self.queryset.filter(product_type__icontains=product_type)
+            self.queryset = self.queryset.filter(product_type__icontains=product_type)  
 
         if category:
             self.queryset = self.queryset.filter(category__name__icontains= category)
@@ -24,7 +24,7 @@ class FilterAndSearch:
 
         if search_type:
             self.queryset = self.queryset.filter(
-                Q(name__icontains=search_type) | 
+                Q(name__icontains=search_type) | # Q allow to use complex operation such as or , and operation
                 Q(category__name__icontains=search_type) | 
                 Q(product_type__icontains=search_type)
             )
