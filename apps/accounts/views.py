@@ -4,9 +4,8 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import TokenError
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework_simplejwt.tokens import RefreshToken
-
 from urllib import request
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -145,6 +144,8 @@ class LoginView(APIView):
                     "username": user.username,
                     "email": user.email,
                     "role": user.role,
+                    "is_staff": user.is_staff,
+                    "is_superuser": user.is_superuser,
                 },
             },
             status=status.HTTP_200_OK,
@@ -171,7 +172,7 @@ class LogoutView(APIView):
 
 
 class UserProfileView(APIView):
-    permissions_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self,request):
         user = request.user  # no need for User.object.get() sedai token bata recognize garcha
@@ -179,3 +180,15 @@ class UserProfileView(APIView):
         serializer = UserProfileSerializer(user)
 
         return Response(serializer.data)
+
+
+class AdminDashboardView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        return Response({
+            "username": request.user.username,
+            "email": request.user.email,
+            "is_staff": request.user.is_staff,
+            "is_superuser": request.user.is_superuser,
+        })

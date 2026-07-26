@@ -110,4 +110,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "email",
             "phone_number",
             "favourite_games",
+            "is_staff",
+            "is_superuser",
         ]

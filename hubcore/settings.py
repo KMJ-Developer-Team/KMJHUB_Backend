@@ -88,8 +88,8 @@ WSGI_APPLICATION = 'hubcore.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'KMJHUB',
-        'USER': 'django_admin',
+        'NAME': 'kmjhub_db',
+        'USER': 'moyush',
         'PASSWORD': 'admin',
         'HOST': 'localhost',
         'PORT': '5432', # default PostgreSQL port
