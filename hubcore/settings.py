@@ -139,20 +139,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
 AUTH_USER_MODEL = "accounts.User"
 
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.AllowAny",
-    ],
-
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ],
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+    ]
 }
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
