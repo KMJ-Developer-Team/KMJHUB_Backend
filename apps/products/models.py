@@ -46,7 +46,7 @@ class Product(models.Model):
         max_digits=10,
         decimal_places=2,
     )
-
+    stock = models.PositiveIntegerField(default=0)
     product_type = models.CharField(
         max_length=20,
         choices= PRODUCT_TYPES,
@@ -56,6 +56,15 @@ class Product(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def stock_status(self):
+        if self.stock == 0:
+            return "Out of Stock"
+        elif self.stock <= 10:
+            return "Low Stock"
+        return "In Stock"
+
 
     def save(self, *args, **kwargs):
         if not self.slug:
