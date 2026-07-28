@@ -4,8 +4,8 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework_simplejwt.tokens import RefreshToken
-
 from urllib import request
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -13,9 +13,6 @@ from django.core.mail import send_mail
 from django.utils.encoding import force_bytes, force_str  # forcebype for value to byte conversion(encoding garna ) arko chai decoding
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode #creates URL_Safe string , encodes user ID (dont knokw wtf this is mari mari bujna khojiya )
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status, permissions
 
 from .models import User
 from .serializers import (
@@ -24,6 +21,7 @@ from .serializers import (
     RegistrationSerializer,
     LoginSerializer, 
     LogoutSerializer,
+    UserProfileSerializer,
 )
 
 
@@ -146,6 +144,8 @@ class LoginView(APIView):
                     "username": user.username,
                     "email": user.email,
                     "role": user.role,
+                    "is_staff": user.is_staff,
+                    "is_superuser": user.is_superuser,
                 },
             },
             status=status.HTTP_200_OK,
@@ -169,3 +169,26 @@ class LogoutView(APIView):
         except TokenError:
             return Response({"message": "Invalid or expired refresh token."}, status=status.HTTP_400_BAD_REQUEST)
         return Response({"message": "Logout successful."}, status=status.HTTP_200_OK)
+
+
+class UserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+        user = request.user  # no need for User.object.get() sedai token bata recognize garcha
+
+        serializer = UserProfileSerializer(user)
+
+        return Response(serializer.data)
+
+
+class AdminDashboardView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        return Response({
+            "username": request.user.username,
+            "email": request.user.email,
+            "is_staff": request.user.is_staff,
+            "is_superuser": request.user.is_superuser,
+        })

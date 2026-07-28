@@ -1,10 +1,13 @@
-from rest_framework.views import APIView
+from django.shortcuts import render
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework import permissions, status
 from .models import Product
-from rest_framework import permissions
+from .filters import FilterAndSearch
 from .serializers import ProductListSerializer, ProductDetailSerializer
 from .pagination import ProductPagination
+# Create your views here.
+
 
 
 class ProductListAPIView(APIView):
@@ -12,8 +15,9 @@ class ProductListAPIView(APIView):
 
     def get(self, request):
         products = Product.objects.filter(is_active=True).order_by("-created_at")
+        queryset = FilterAndSearch(request, products).apply()
         paginator = ProductPagination()
-        paginated_products = paginator.paginate_queryset(products, request)
+        paginated_products = paginator.paginate_queryset(queryset, request)
         serializer = ProductListSerializer(paginated_products, many=True)
         return paginator.get_paginated_response(serializer.data)
 
