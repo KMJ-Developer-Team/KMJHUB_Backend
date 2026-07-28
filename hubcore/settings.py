@@ -40,6 +40,11 @@ INSTALLED_APPS = [
     "apps.products",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
+    "corsheaders",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
 ]
 
 REST_FRAMEWORK = {
@@ -60,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'hubcore.urls'
