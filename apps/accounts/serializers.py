@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from xml.dom import ValidationErr
 from rest_framework import serializers
 from .models import User
 
@@ -47,15 +46,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "You must accept terms for registration."
             )
-
-        return data
-
-    def validate(self, data): #this method is called when we call serializer.is_valid() in views.py
-        if data['password'] != data['confirm_password']:
-            raise ValidationErr("Password don't match")
-
-        if not data['accept_terms']:
-            raise ValidationErr('You must accept terms for registration')
 
         return data
 
