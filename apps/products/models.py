@@ -65,7 +65,6 @@ class Product(models.Model):
             return "Low Stock"
         return "In Stock"
 
-
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)

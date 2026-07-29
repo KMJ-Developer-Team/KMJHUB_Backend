@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     "apps.products",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
-    "corsheaders",
 ]
 
 REST_FRAMEWORK = {
@@ -54,7 +53,6 @@ REST_FRAMEWORK = {
 
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -63,12 +61,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://localhost:5174",
-]
-
 
 ROOT_URLCONF = 'hubcore.urls'
 
@@ -96,8 +88,8 @@ WSGI_APPLICATION = 'hubcore.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'kmjhub_db',
-        'USER': 'moyush',
+        'NAME': 'KMJHUB',
+        'USER': 'django_admin',
         'PASSWORD': 'admin',
         'HOST': 'localhost',
         'PORT': '5432', # default PostgreSQL port
@@ -141,20 +133,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
 AUTH_USER_MODEL = "accounts.User"
 
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.AllowAny",
-    ],
-
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ],
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+    ]
 }
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -163,7 +148,7 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = "acea9079@gmail.com"
+EMAIL_HOST_USER = "csitkolagi@gmail.com"
 EMAIL_HOST_PASSWORD = "wgrb udpe hucm afod"
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
