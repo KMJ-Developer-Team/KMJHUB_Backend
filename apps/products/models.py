@@ -38,7 +38,7 @@ class Product(models.Model):
         related_name="products",
     )
 
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=220, unique=True, blank=True)
     image = models.ImageField(upload_to="products/", blank=True)
     description = models.TextField()
